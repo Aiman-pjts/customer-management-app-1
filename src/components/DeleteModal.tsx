@@ -5,12 +5,14 @@ interface DeleteModalProps {
   customer: Customer | null;
   onConfirm: () => void;
   onCancel: () => void;
+  isDeleting?: boolean;
 }
 
 export default function DeleteModal({
   customer,
   onConfirm,
   onCancel,
+  isDeleting = false,
 }: DeleteModalProps) {
   if (!customer) {
     return null;
@@ -50,7 +52,8 @@ export default function DeleteModal({
           <button
             type="button"
             onClick={onCancel}
-            className="rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
+            disabled={isDeleting}
+            className="rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 disabled:opacity-50"
           >
             Cancel
           </button>
@@ -58,10 +61,13 @@ export default function DeleteModal({
           <button
             type="button"
             onClick={onConfirm}
-            className="inline-flex items-center gap-2 rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700"
+            disabled={isDeleting}
+            className={`inline-flex items-center gap-2 rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700 ${
+              isDeleting ? "cursor-not-allowed opacity-75" : ""
+            }`}
           >
             <Trash2 className="h-4 w-4" />
-            Delete Customer
+            {isDeleting ? "Deleting..." : "Delete Customer"}
           </button>
         </div>
       </div>

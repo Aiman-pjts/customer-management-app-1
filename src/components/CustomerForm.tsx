@@ -7,6 +7,7 @@ interface CustomerFormProps {
   customer?: Customer | null;
   onSubmit: (data: CustomerFormData) => void;
   onCancel?: () => void;
+  isSubmitting?: boolean;
 }
 
 interface FormErrors {
@@ -27,6 +28,7 @@ export default function CustomerForm({
   customer,
   onSubmit,
   onCancel,
+  isSubmitting = false,
 }: CustomerFormProps) {
   const [formData, setFormData] =
     useState<CustomerFormData>(initialFormData);
@@ -35,6 +37,7 @@ export default function CustomerForm({
 
   // Populate form when editing a customer
   useEffect(() => {
+    /* eslint-disable react-hooks/set-state-in-effect */
     if (customer) {
       setFormData({
         name: customer.name,
@@ -47,6 +50,7 @@ export default function CustomerForm({
     }
 
     setErrors({});
+    /* eslint-enable react-hooks/set-state-in-effect */
   }, [customer]);
 
   // Handle input changes
@@ -115,7 +119,7 @@ export default function CustomerForm({
   ) => {
     event.preventDefault();
 
-    if (!validate()) {
+    if (isSubmitting || !validate()) {
       return;
     }
 
@@ -298,7 +302,10 @@ export default function CustomerForm({
         <div className="mt-6 flex flex-col gap-3 sm:flex-row">
           <button
             type="submit"
-            className="inline-flex items-center justify-center gap-2 rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-medium text-white transition hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+            disabled={isSubmitting}
+            className={`inline-flex items-center justify-center gap-2 rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-medium text-white transition hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${
+              isSubmitting ? "cursor-not-allowed opacity-75" : ""
+            }`}
           >
             {customer ? (
               <Check className="h-4 w-4" />
@@ -306,7 +313,13 @@ export default function CustomerForm({
               <Plus className="h-4 w-4" />
             )}
 
-            {customer ? "Update Customer" : "Add Customer"}
+            {isSubmitting
+              ? customer
+                ? "Updating..."
+                : "Adding..."
+              : customer
+              ? "Update Customer"
+              : "Add Customer"}
           </button>
 
           {/* Cancel button only appears while editing */}
@@ -314,7 +327,8 @@ export default function CustomerForm({
             <button
               type="button"
               onClick={onCancel}
-              className="inline-flex items-center justify-center gap-2 rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm font-medium text-slate-700 transition hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2"
+              disabled={isSubmitting}
+              className="inline-flex items-center justify-center gap-2 rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm font-medium text-slate-700 transition hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 disabled:opacity-50"
             >
               <X className="h-4 w-4" />
               Cancel

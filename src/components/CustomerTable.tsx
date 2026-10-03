@@ -1,4 +1,5 @@
-import { MapPin, Pencil, Trash2 } from "lucide-react";
+import Link from "next/link";
+import { Eye, MapPin, Pencil, Trash2 } from "lucide-react";
 import type { Customer } from "../types/customer";
 
 interface CustomerTableProps {
@@ -60,9 +61,12 @@ export default function CustomerTable({
                     {getInitials(customer.name)}
                   </div>
 
-                  <span className="font-medium text-slate-800">
+                  <Link
+                    href={`/customers/${customer.id}`}
+                    className="font-medium text-slate-800 hover:text-blue-600 transition-colors"
+                  >
                     {customer.name}
-                  </span>
+                  </Link>
                 </div>
               </td>
 
@@ -83,10 +87,19 @@ export default function CustomerTable({
 
               <td className="px-5 py-4">
                 <div className="flex justify-end gap-2">
+                  <Link
+                    href={`/customers/${customer.id}`}
+                    className="inline-flex items-center gap-1.5 rounded-md px-2.5 py-1.5 text-sm font-medium text-slate-600 hover:bg-slate-100 hover:text-slate-900"
+                    aria-label={`View ${customer.name}`}
+                  >
+                    <Eye className="h-4 w-4 text-slate-400" />
+                    View
+                  </Link>
+
                   <button
                     type="button"
                     onClick={() => onEdit(customer)}
-                    className="inline-flex items-center gap-1.5 rounded-md px-3 py-2 text-sm font-medium text-slate-600 hover:bg-blue-50 hover:text-blue-600"
+                    className="inline-flex items-center gap-1.5 rounded-md px-2.5 py-1.5 text-sm font-medium text-slate-600 hover:bg-blue-50 hover:text-blue-600"
                     aria-label={`Edit ${customer.name}`}
                   >
                     <Pencil className="h-4 w-4" />
@@ -96,7 +109,7 @@ export default function CustomerTable({
                   <button
                     type="button"
                     onClick={() => onDelete(customer)}
-                    className="inline-flex items-center gap-1.5 rounded-md px-3 py-2 text-sm font-medium text-slate-600 hover:bg-red-50 hover:text-red-600"
+                    className="inline-flex items-center gap-1.5 rounded-md px-2.5 py-1.5 text-sm font-medium text-slate-600 hover:bg-red-50 hover:text-red-600"
                     aria-label={`Delete ${customer.name}`}
                   >
                     <Trash2 className="h-4 w-4" />
