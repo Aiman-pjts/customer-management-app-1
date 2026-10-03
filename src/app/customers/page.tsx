@@ -270,10 +270,15 @@ export default function CustomersDashboardPage() {
     });
   }, [customers, searchTerm, selectedCity]);
 
-  // Reset pagination when filter/search changes
-  useEffect(() => {
+  const handleSearchChange = (value: string) => {
+    setSearchTerm(value);
     setCurrentPage(1);
-  }, [searchTerm, selectedCity]);
+  };
+
+  const handleCityChange = (city: string) => {
+    setSelectedCity(city);
+    setCurrentPage(1);
+  };
 
   // Paginated customers for current page
   const paginatedCustomers = useMemo(() => {
@@ -343,10 +348,10 @@ export default function CustomersDashboardPage() {
           customers={paginatedCustomers}
           totalCustomerCount={filteredCustomers.length}
           searchTerm={searchTerm}
-          onSearchChange={setSearchTerm}
+          onSearchChange={handleSearchChange}
           cities={uniqueCities}
           selectedCity={selectedCity}
-          onCityChange={setSelectedCity}
+          onCityChange={handleCityChange}
           onEdit={handleEdit}
           onDelete={(customer) => {
             setDeletingCustomer(customer);

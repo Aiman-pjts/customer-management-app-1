@@ -46,4 +46,3 @@ export default function Header({ userEmail, onLogout }: HeaderProps) {
     </header>
   );
 }
-}
